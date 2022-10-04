@@ -1,17 +1,52 @@
-version: "3.2"
+version: "3.8"
 
 services:
-  dev:
-    container_name: node-template
+  parachain-node:
     image: paritytech/ci-linux:production
-    working_dir: /var/www/node-template
+    working_dir: /var/www/parachain-node
     ports:
       - "9944:9944"
     environment:
-      - CARGO_HOME=/var/www/node-template/.cargo
+      - CARGO_HOME=/var/www/parachain-node/.cargo
     volumes:
-      - .:/var/www/node-template
+      - .:/var/www/parachain-node
       - type: bind
         source: ./.local
         target: /root/.local
-    command: bash -c "cargo build --release && ./target/release/node-template --dev --ws-external"
+    build:
+      context: ./docker/parachain
+      dockerfile: parachain-node.dockerfile
+    command: bash -c "cargo build --release && ./target/release/parachain-node --dev --ws-external"
+  api:
+    depends_on:
+      - parachain-node
+    build:
+      context: ./docker/api
+      dockerfile: api.dockerfile
+    volumes:
+      - /app/node_modules
+      - ./...:/app
+  frontend:
+    build:
+      context: ./docker/frontend
+      dockerfile: frontend.dockerfile
+    volumes:
+      - /app/node_modules
+      - ./...:/app
+  nginx:
+    container_name: web-server
+    image: nginx:latest
+    depends_on:
+      - api
+      - frontend
+    # restart: unless-stopped ?
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # - /nginx.conf:/etc/nginx/nginx.conf
+      - ./api/conf/api.all-in.conf:/etc/nginx/sites-enabled/api.all-in.conf
+      - ./api/conf/frontend.all-in.conf:/etc/nginx/sites-enabled/frontend.all-in.conf
+      # - /home/ubuntu/ssl:/ssl/
+
+
