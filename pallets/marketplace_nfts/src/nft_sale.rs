@@ -45,7 +45,8 @@ pub mod pallet {
 
 		type Currency: ReservableCurrency<Self::AccountId>;
 
-		/// minimum amount of token to claim Soulbound		#[pallet::constant]
+		/// minimum amount of token to claim Soulbound
+		#[pallet::constant]
 		type MinBalanceToClaimSoulbound: Get<BalanceOf<Self>>;
 	}
 
