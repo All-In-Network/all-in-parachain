@@ -269,7 +269,7 @@ pub mod pallet {
 		}
 
         /// Privileged function to set the status for one of the defined StatusTypes like
-		/// ClaimSoulbound, PurchaseRaretrador, or Preordertrador to enable
+		/// ClaimSoulbound
 		///
 		/// Parameters:
 		/// - `origin` - Expected Manager admin account to set the status
