@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "node",
-    "pallets/template",
+    "pallets/marketplace_nfts",
     "runtime",
 ]
 [profile.release]

@@ -1,0 +1,50 @@
+[package]
+name = "pallet-marketplace-nfts"
+version = "4.0.0-dev"
+description = "Pallet for nft soulbounds management sale"
+authors = ["All-in parachain"]
+homepage = "https://all-in.app/"
+license = "Unlicense"
+edition = "2021"
+publish = false
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
+scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+frame-support = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29"}
+frame-system = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
+frame-benchmarking = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29", optional = true }
+serde = { version = "1.0.111", default-features = false, features = ["derive"] }
+
+pallet-balances = {default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
+sp-core = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
+sp-io = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
+sp-runtime = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
+sp-std = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
+
+#rmrk
+pallet-rmrk-core = { git = "https://github.com/rmrk-team/rmrk-substrate", branch = "polkadot-v0.9.29", default-features = false }
+pallet-rmrk-equip = { git = "https://github.com/rmrk-team/rmrk-substrate", branch = "polkadot-v0.9.29", default-features = false }
+pallet-rmrk-market = { git = "https://github.com/rmrk-team/rmrk-substrate", branch = "polkadot-v0.9.29", default-features = false }
+rmrk-traits = { git = "https://github.com/rmrk-team/rmrk-substrate", branch = "polkadot-v0.9.29", default-features = false }
+pallet-uniques = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.29", default-features = false }
+
+
+[features]
+default = ["std"]
+std = [
+	"codec/std",
+	"scale-info/std",
+    "pallet-rmrk-core/std",
+    "pallet-rmrk-equip/std",
+    "pallet-rmrk-equip/std",
+    "pallet-uniques/std",
+]
+
+runtime-benchmarks = ["frame-benchmarking/runtime-benchmarks"]
+try-runtime = ["frame-support/try-runtime"]
