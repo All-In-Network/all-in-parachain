@@ -203,9 +203,9 @@ pub mod pallet {
 		///
 		/// Parameters:
 		/// - `origin`: Expected to be called by Manager
-		/// - `metadata`: Metadata pertaining to the collection
+		/// - `metadata`: Metadata to the collection
 		/// - `max`: Optional max u32 for the size of the collection
-		/// - `symbol`: BoundedString of the collection's symbol i.e 'OVRLD'
+		/// - `symbol`: BoundedString of the collection's symbol for example 'TRDR'
 		#[pallet::weight(T::DbWeight::get().reads_writes(1,1))]
 		#[transactional]
 		pub fn trador_create_collection(
