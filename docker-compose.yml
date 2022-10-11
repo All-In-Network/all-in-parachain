@@ -11,9 +11,6 @@ services:
       - CARGO_HOME=/var/www/parachain-node/.cargo
     volumes:
       - .:/var/www/parachain-node
-      - type: bind
-        source: ./.local
-        target: /root/.local
     command: bash -c "cargo build --release && ./target/release/all-in-network --dev --ws-external"
   rpc:
     container_name: rpc
