@@ -430,6 +430,105 @@ impl nft_sale::Config for Runtime {
 }
 // ======NFT SALE ==========
 
+// =======PROXY=======
+parameter_types! {
+    // One storage item; key size 32, value size 8; .
+    pub const ProxyDepositBase: Balance = deposit(1, 40);
+    // Additional storage item size of 33 bytes.
+    pub const ProxyDepositFactor: Balance = deposit(0, 33);
+    pub const MaxProxies: u32 = 100000;
+    // One storage item; key size 32, value size 16
+    pub const AnnouncementDepositBase: Balance = deposit(1, 48);
+    pub const AnnouncementDepositFactor: Balance = deposit(0, 66);
+    pub const MaxPending: u16 = 32;
+}
+
+/// The type used to represent the kinds of proxying allowed.
+#[derive(
+    Copy,
+    Clone,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Encode,
+    Decode,
+    RuntimeDebug,
+    MaxEncodedLen,
+    scale_info::TypeInfo,
+)]
+pub enum ProxyType {
+    /// Fully permissioned proxy. Can execute any call on behalf of _proxied_.
+    Any,
+    /// Can execute any call that does not transfer funds, including asset transfers.
+    NonTransfer,
+    /// Proxy with the ability to reject time-delay proxy announcements.
+    CancelProxy,
+}
+
+impl Default for ProxyType {
+    fn default() -> Self {
+        Self::Any
+    }
+}
+
+impl InstanceFilter<Call> for ProxyType {
+    fn filter(&self, c: &Call) -> bool {
+        match self {
+            ProxyType::Any => true,
+            ProxyType::NonTransfer => matches!(
+                c,
+                Call::System { .. }
+                    | Call::Timestamp { .. }
+                    //| Call::Treasury { .. }
+                    | Call::Utility { .. }
+                    | Call::Proxy { .. }
+					//| Call::Nicks { .. }
+					| Call::NftSale { .. }
+            ),
+            ProxyType::CancelProxy => matches!(
+                c,
+                Call::Proxy(pallet_proxy::Call::reject_announcement { .. })
+                    | Call::Utility { .. }
+            ),
+        }
+    }
+    fn is_superset(&self, o: &Self) -> bool {
+        match (self, o) {
+            (x, y) if x == y => true,
+            (ProxyType::Any, _) => true,
+            (_, ProxyType::Any) => false,
+            (ProxyType::NonTransfer, _) => true,
+            _ => false,
+        }
+    }
+}
+
+impl pallet_proxy::Config for Runtime {
+    type Event = Event;
+    type Call = Call;
+    type Currency = Balances;
+    type ProxyType = ProxyType;
+    type ProxyDepositBase = ProxyDepositBase;
+    type ProxyDepositFactor = ProxyDepositFactor;
+    type MaxProxies = MaxProxies;
+    type WeightInfo = pallet_proxy::weights::SubstrateWeight<Runtime>;
+    type MaxPending = MaxPending;
+    type CallHasher = sp_runtime::traits::BlakeTwo256;
+    type AnnouncementDepositBase = AnnouncementDepositBase;
+    type AnnouncementDepositFactor = AnnouncementDepositFactor;
+}
+// =========PROXY==========
+
+// ======UTILITY========
+impl pallet_utility::Config for Runtime {
+	type Event = Event;
+	type Call = Call;
+	type PalletsOrigin = OriginCaller;
+	type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
+}
+// =================
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub struct Runtime
@@ -446,7 +545,9 @@ construct_runtime!(
 		Balances: pallet_balances,
 		TransactionPayment: pallet_transaction_payment,
 		Sudo: pallet_sudo,
+		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>},
 		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>},
+		Utility: pallet_utility::{Pallet, Call, Storage, Event},
 
 		NftSale: nft_sale,
 		//rmrk pallets
@@ -503,7 +604,6 @@ mod benches {
 	);
 }
 
-//https://github.com/rmrk-team/rmrk-substrate/blob/main/runtime/src/lib.rs#L472
 fn option_filter_keys_to_set<StringLimit: frame_support::traits::Get<u32>>(
     filter_keys: Option<Vec<pallet_rmrk_rpc_runtime_api::PropertyKey>>,
 ) -> pallet_rmrk_rpc_runtime_api::Result<Option<BTreeSet<BoundedVec<u8, StringLimit>>>> {
@@ -623,7 +723,6 @@ impl_runtime_apis! {
 			Ok(theme)
 		}
 	}
-
 
 	impl sp_api::Core<Block> for Runtime {
 		fn version() -> RuntimeVersion {
