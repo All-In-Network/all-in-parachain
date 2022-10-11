@@ -14,3 +14,7 @@
 
 # direnv cache
 .direnv
+
+# Environment files
+.env
+certbot/
