@@ -17,7 +17,7 @@ use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
 	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, Verify},
 	transaction_validity::{TransactionSource, TransactionValidity},
-	ApplyExtrinsicResult, MultiSignature, DispatchError
+	ApplyExtrinsicResult, MultiSignature, DispatchError, Percent
 };
 use sp_std::{collections::btree_set::BTreeSet, prelude::*};
 
@@ -49,7 +49,7 @@ pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
 
-// RMRK && NFTSALE PALLET IMPORTS
+// RMRK && NFTSALE && FUNDING PALLET IMPORTS
 use pallet_rmrk_core::{CollectionInfoOf, InstanceInfoOf, PropertyInfoOf, ResourceInfoOf};
 use pallet_rmrk_equip::{BaseInfoOf, BoundedThemeOf, PartTypeOf};
 use rmrk_traits::{primitives::*, NftChild};
@@ -57,6 +57,7 @@ pub use pallet_rmrk_core;
 pub use pallet_rmrk_equip;
 pub use pallet_rmrk_market;
 pub use pallet_marketplace_nfts::{nft_sale};
+pub use pallet_funding::{funding_trador};
 // =====
 
 /// An index to a block.
@@ -301,32 +302,28 @@ impl pallet_balances::Config for Runtime {
 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 }
 
-
+// ======NICKS========
 impl pallet_nicks::Config for Runtime {
 	// The Balances pallet implements the ReservableCurrency trait.
 	// `Balances` is defined in `construct_runtime!` macro.
 	type Currency = Balances;
-	
 	// Set ReservationFee to a value.
 	type ReservationFee = ConstU128<100>;
-	
 	// No action is taken when deposits are forfeited.
 	type Slashed = ();
-	
 	// Configure the FRAME System Root origin as the Nick pallet admin.
 	// https://paritytech.github.io/substrate/master/frame_system/enum.RawOrigin.html#variant.Root
 	type ForceOrigin = frame_system::EnsureRoot<AccountId>;
-	
 	// Set MinLength of nick name to a desired value.
 	type MinLength = ConstU32<8>;
-	
 	// Set MaxLength of nick name to a desired value.
 	type MaxLength = ConstU32<32>;
-	
 	// The ubiquitous event type.
 	//type RuntimeEvent = RuntimeEvent;
 	type Event = Event;
 }
+// ======NICKS========
+
 
 impl pallet_transaction_payment::Config for Runtime {
 	type Event = Event;
@@ -529,6 +526,56 @@ impl pallet_utility::Config for Runtime {
 }
 // =================
 
+// ========TREASURY======
+parameter_types! {
+    pub const ProposalBond: Permill = Permill::from_percent(5);
+    pub const ProposalBondMinimum: Balance = 1 * DOLLARS;
+    pub const FProposalBondMinimum: Balance = 1 * DOLLARS;
+    pub const SpendPeriod: BlockNumber = 5;
+    pub const Burn: Permill = Permill::zero();
+    pub const TipCountdown: BlockNumber = 1 * DAYS;
+    pub const TipFindersFee: Percent = Percent::from_percent(20);
+    pub const TipReportDepositBase: Balance = 1 * DOLLARS;
+    pub const DataDepositPerByte: Balance = 1 * CENTS;
+    pub const TreasuryPalletId: PalletId = PalletId(*b"py/trsry");
+    pub const MaximumReasonLength: u32 = 16384;
+    pub const MaxApprovals: u32 = 100;
+}
+
+//5EYCAe5ijiYfyeZ2JJCGq56LmPyNRAKzpG4QkoQkkQNB5e6Z
+impl pallet_treasury::Config for Runtime {
+    type PalletId = TreasuryPalletId;
+    type Currency = Balances;
+    type ApproveOrigin = EnsureRoot<AccountId>;
+    type RejectOrigin = EnsureRoot<AccountId>;
+    type Event = Event;
+    type OnSlash = ();
+    type ProposalBond = ProposalBond;
+    type ProposalBondMinimum = ProposalBondMinimum;
+    type ProposalBondMaximum = ();
+    type SpendPeriod = SpendPeriod;
+    type Burn = Burn;
+    type BurnDestination = ();
+    type SpendFunds = ();
+    type WeightInfo = pallet_treasury::weights::SubstrateWeight<Runtime>;
+    type MaxApprovals = MaxApprovals;
+    type SpendOrigin = frame_support::traits::NeverEnsureOrigin<u128>;
+}
+// ==============
+
+// ======FUNDING==========
+parameter_types!{
+	pub const FundingPalletId: PalletId = PalletId(*b"tfunding");
+}
+
+impl funding_trador::Config for Runtime {
+	type Event = Event;
+	type PalletId = FundingPalletId;
+	type GovernanceOrigin = EnsureRoot<AccountId>;
+	type Currency = Balances;
+}
+// ======FUNDING==========
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub struct Runtime
@@ -548,8 +595,11 @@ construct_runtime!(
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>},
 		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>},
 		Utility: pallet_utility::{Pallet, Call, Storage, Event},
+		Treasury: pallet_treasury::{Pallet, Call, Storage, Config, Event<T>},
 
 		NftSale: nft_sale,
+		Funding: funding_trador,
+
 		//rmrk pallets
 		RmrkEquip: pallet_rmrk_equip::{Pallet, Call, Event<T>, Storage},
 		RmrkCore: pallet_rmrk_core::{Pallet, Call, Event<T>, Storage},
