@@ -61,6 +61,7 @@ pallet-rmrk-market = { git = "https://github.com/rmrk-team/rmrk-substrate", bran
 rmrk-traits = { git = "https://github.com/rmrk-team/rmrk-substrate", branch = "polkadot-v0.9.29", default-features = false }
 pallet-rmrk-rpc-runtime-api = { git = "https://github.com/rmrk-team/rmrk-substrate", branch = "polkadot-v0.9.29", default-features = false }
 
+pallet-nicks = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
 
 [build-dependencies]
 substrate-wasm-builder = { version = "5.0.0-dev", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.29" }
@@ -102,6 +103,7 @@ std = [
 	"pallet-marketplace-nfts/std",
 	"pallet-proxy/std",
 	"pallet-utility/std",
+  "pallet-nicks/std",
 ]
 runtime-benchmarks = [
 	"frame-benchmarking/runtime-benchmarks",
