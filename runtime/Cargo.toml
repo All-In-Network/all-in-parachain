@@ -99,6 +99,7 @@ std = [
 	"pallet-rmrk-equip/std",
 	"pallet-rmrk-market/std",
 	"pallet-rmrk-rpc-runtime-api/std",
+	"pallet-marketplace-nfts/std",
 	"pallet-proxy/std",
 	"pallet-utility/std",
 ]
