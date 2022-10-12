@@ -138,6 +138,7 @@ dependencies = [
  "hex-literal",
  "pallet-aura",
  "pallet-balances",
+ "pallet-funding",
  "pallet-grandpa",
  "pallet-marketplace-nfts",
  "pallet-nicks",
@@ -151,6 +152,7 @@ dependencies = [
  "pallet-timestamp",
  "pallet-transaction-payment",
  "pallet-transaction-payment-rpc-runtime-api",
+ "pallet-treasury",
  "pallet-uniques",
  "pallet-utility",
  "parity-scale-codec",
@@ -4061,6 +4063,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-funding"
+version = "0.1.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "pallet-balances",
+ "pallet-proxy",
+ "pallet-rmrk-core",
+ "pallet-rmrk-equip",
+ "pallet-rmrk-market",
+ "pallet-uniques",
+ "parity-scale-codec",
+ "rmrk-traits",
+ "scale-info",
+ "serde",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "pallet-grandpa"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.29#cc370aa61e15c18d23a2f686b812fd576a630afe"
@@ -4311,6 +4336,22 @@ dependencies = [
  "parity-scale-codec",
  "sp-api",
  "sp-runtime",
+]
+
+[[package]]
+name = "pallet-treasury"
+version = "4.0.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.29#cc370aa61e15c18d23a2f686b812fd576a630afe"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "impl-trait-for-tuples",
+ "pallet-balances",
+ "parity-scale-codec",
+ "scale-info",
+ "serde",
+ "sp-runtime",
+ "sp-std",
 ]
 
 [[package]]
