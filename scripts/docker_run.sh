@@ -1,29 +1,47 @@
 #!/usr/bin/env bash
 # This script is meant to be run on Unix/Linux based systems
+
 set -e
 
+
+# Check the current directory to ensure the user
+# executes the script successfully.
+if [ ! -d "scripts" ]; then
+  echo "You need to run this script from the project root folder."
+  exit 1
+fi
+
+
+# Load variables from env vars file, if currently defined
+if [ -f ".env" ]; then
+  export $(cat .env | xargs)
+fi
+
+
+# Check if the environment file is correctly defined
+if [ ! -f ".env" ] || \
+  [[ -z "${COMPOSE_PROJECT_NAME}" ]] || \
+  [[ -z "${DOMAIN}" ]] || \
+  [[ -z "${EMAIL}" ]]; then
+  echo "Complete the following information to deploy the node:"
+
+  # Get two parameters to associate with the
+  # RPC Let's Encrypt certificate.
+  #
+  # - Domain name
+  # - Domain email address
+  #
+  read -p "[RPC Domain Name]: " DOMAIN
+  read -p "[RPC Domain Email Address]: " EMAIL
+
+  # Export the parameters values to the project environment file
+  echo COMPOSE_PROJECT_NAME="all-in-app" > .env
+  echo DOMAIN=${DOMAIN} >> .env
+  echo EMAIL=${EMAIL} >> .env
+fi
+
+
 echo "*** Starting All in Network node ***"
-
-# Evaluate current directory
-# ...
-
-
-# Takes three parameters to associate with the certificate:
-#
-# - Application name
-# - Domain name
-# - Email
-#
-
-COMPOSE_PROJECT_NAME=$1
-DOMAIN=$2
-EMAIL=$3
-
-
-# Description
-echo COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME} > .env
-echo DOMAIN=${DOMAIN} >> .env
-echo EMAIL=${EMAIL} >> .env
 
 
 # Phase 1
