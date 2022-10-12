@@ -44,7 +44,10 @@ fi
 echo "*** Starting All in Network node ***"
 
 
-# Phase 1
+# Remove old infrastructure
+docker compose down -v --remove-orphans
+
+# Prepare RPC Let's Encrypt certificate
 docker compose -f ./docker-compose-initiate.yml up -d nginx
 docker compose -f ./docker-compose-initiate.yml up certbot
 docker compose -f ./docker-compose-initiate.yml down
@@ -54,6 +57,8 @@ curl -L --create-dirs -o conf/rpc/letsencrypt/options-ssl-nginx.conf https://raw
 
 openssl dhparam -out conf/rpc/letsencrypt/ssl-dhparams.pem 2048
 
-# Phase 2
+# Define a cron job to renew the Let's Encrypt certificate
 crontab ./conf/rpc/crontab/crontab.conf
+
+# Deploy the new infrastructure
 docker compose -f ./docker-compose.yml up -d
