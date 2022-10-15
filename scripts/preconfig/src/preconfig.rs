@@ -80,7 +80,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let tx_event = txs_progress.find_first::<allin::utility::events::BatchCompleted>()?;
 
     if let Some(event) = tx_event {
-        println!("batch successfully: {event:#?}");
+        println!("Transfer of funds to the treasury successfully completed.");
+        println!("NFT Soulbound's collection successfully created.");
+        println!("{event:#?}");
     } else {
         println!("Failed to find Event");
     }
