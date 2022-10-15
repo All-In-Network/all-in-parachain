@@ -24,7 +24,7 @@ pub mod allin {}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let api = OnlineClient::<PolkadotConfig>::from_url("wss://rpc.all-in.app:443").await?;
+    let api = OnlineClient::<PolkadotConfig>::new().await?;
     let signer = AccountKeyring::Alice;
 
     set_funding_manager(api.clone(), signer.clone()).await?;

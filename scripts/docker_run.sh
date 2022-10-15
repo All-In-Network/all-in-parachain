@@ -63,5 +63,20 @@ crontab ./conf/rpc/crontab/crontab.conf
 # Deploy the new infrastructure
 docker compose -f ./docker-compose.yml up -d
 
-# Preconfigure the node
-cargo run --bin preconfig
+PRECONFIG_NODE=1
+
+while [ $PRECONFIG_NODE -eq 1 ]
+do
+  STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" localhost:9944 || true)
+
+  if [ $STATUS_CODE -ne 000 ]
+  then
+    PRECONFIG_NODE=0
+
+    # Preconfigure the node
+    echo "Running the required configuration for the parachain..."
+    docker compose exec parachain-node cargo run --bin preconfig
+  fi
+
+  sleep 1
+done
