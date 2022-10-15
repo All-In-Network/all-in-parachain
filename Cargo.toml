@@ -4,7 +4,7 @@ members = [
     "pallets/marketplace_nfts",
     "pallets/funding",
     "runtime",
-    "scripts/all-in-subxt"
+    "scripts/preconfig"
 ]
 [profile.release]
 panic = "unwind"

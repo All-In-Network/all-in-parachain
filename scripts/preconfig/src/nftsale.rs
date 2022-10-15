@@ -1,7 +1,6 @@
 use allin::runtime_types::{
     self, pallet_marketplace_nfts::types::StatusType, sp_runtime::bounded::bounded_vec::BoundedVec,
 };
-use futures::StreamExt;
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use subxt::{
@@ -106,7 +105,7 @@ async fn set_nftsale_manager(
     let tx_event = sudo_call_progress.find_first::<allin::nft_sale::events::ManagerChanged>()?;
 
     if let Some(event) = tx_event {
-        println!("Funding manager created successfully: {event:#?}");
+        println!("NFT Sale manager created successfully: {event:#?}");
     } else {
         println!("Failed to find Event");
     }

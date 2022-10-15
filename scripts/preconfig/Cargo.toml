@@ -1,13 +1,13 @@
 [package]
-name = "all-in-preconfig"
+name = "preconfig"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name = "proxy_test"
-path = "src/proxy_test.rs"
+name = "funding"
+path = "src/funding.rs"
 
 [[bin]]
 name = "nft_sale"

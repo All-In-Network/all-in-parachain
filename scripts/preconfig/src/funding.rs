@@ -1,6 +1,5 @@
 use allin::runtime_types;
-use futures::StreamExt;
-use sp_keyring::{ed25519::ed25519::Pair, AccountKeyring};
+use sp_keyring::{AccountKeyring};
 use subxt::{
     config::WithExtrinsicParams,
     ext::sp_runtime::AccountId32,
@@ -80,7 +79,7 @@ async fn create_new_funding_account(
     let tx_event = create_new_tx_progress.find_first::<allin::proxy::events::AnonymousCreated>()?;
 
     if let Some(event) = tx_event {
-        println!("New proxy cerated: {event:#?}");
+        println!("New proxy created: {event:#?}");
         return Ok(Some(event.anonymous.clone()));
     } else {
         println!("Failed to find Event");
