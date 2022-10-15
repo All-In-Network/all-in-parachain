@@ -69,7 +69,7 @@ while [ $PRECONFIG_NODE -eq 1 ]
 do
   STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" localhost:9944 || true)
 
-  echo "Attempting to connect to parachain node..."
+  echo "Attempting to connect to parachain node to run the initial configuration..."
 
   if [ $STATUS_CODE -ne 000 ]
   then
@@ -80,5 +80,5 @@ do
     docker compose exec parachain-node cargo run --bin preconfig
   fi
 
-  sleep 2
+  sleep 5
 done
