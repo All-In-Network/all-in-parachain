@@ -55,7 +55,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }),
         Call::NftSale(NftSaleCall::trador_create_collection {
             metadata: metadata,
-            max: Some(0),
+            max: None,
             symbol,
         }),
         Call::NftSale(NftSaleCall::set_soulbound_metadata {
