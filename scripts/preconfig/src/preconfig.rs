@@ -11,8 +11,9 @@ use subxt::{
 };
 
 type Call = runtime_types::all_in_runtime::Call;
-type NftSaleCall = runtime_types::pallet_marketplace_nfts::nft_sale::pallet::Call;
 type BalancesCall = runtime_types::pallet_balances::pallet::Call;
+type FundingCall = runtime_types::pallet_funding::funding_trador::pallet::Call;
+type NftSaleCall = runtime_types::pallet_marketplace_nfts::nft_sale::pallet::Call;
 
 type ApiClient = OnlineClient<
     WithExtrinsicParams<SubstrateConfig, BaseExtrinsicParams<SubstrateConfig, PlainTip>>,
@@ -26,7 +27,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let api = OnlineClient::<PolkadotConfig>::from_url("wss://rpc.all-in.app:443").await?;
     let signer = AccountKeyring::Alice;
 
-    let _ = set_nftsale_manager(api.clone(), signer.clone()).await?;
+    set_funding_manager(api.clone(), signer.clone()).await?;
+    set_nftsale_manager(api.clone(), signer.clone()).await?;
 
     let treasury_account =
         AccountId32::from_str("5EYCAe5ijiYfyeZ2JJCGq56LmPyNRAKzpG4QkoQkkQNB5e6Z")?;
@@ -84,6 +86,36 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     Ok(())
 }
+
+
+async fn set_funding_manager(
+    api: ApiClient,
+    signer: AccountKeyring,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let alice = PairSigner::new(signer.pair());
+    let call = Call::Funding(FundingCall::set_manager {
+        new_manager: signer.to_account_id(),
+    });
+    let sudo_call_tx = allin::tx().sudo().sudo(call);
+
+    let sudo_call_progress = api
+        .tx()
+        .sign_and_submit_then_watch_default(&sudo_call_tx, &alice)
+        .await?
+        .wait_for_finalized_success()
+        .await?;
+
+    let tx_event = sudo_call_progress.find_first::<allin::funding::events::ManagerChanged>()?;
+
+    if let Some(event) = tx_event {
+        println!("Funding manager created successfully: {event:#?}");
+    } else {
+        println!("Failed to find Event");
+    }
+
+    Ok(())
+}
+
 
 async fn set_nftsale_manager(
     api: ApiClient,

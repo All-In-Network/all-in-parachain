@@ -62,3 +62,6 @@ crontab ./conf/rpc/crontab/crontab.conf
 
 # Deploy the new infrastructure
 docker compose -f ./docker-compose.yml up -d
+
+# Preconfigure the node
+cargo run --bin preconfig
