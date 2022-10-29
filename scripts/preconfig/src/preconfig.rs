@@ -51,7 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let txs_calls = vec![
         Call::Balances(BalancesCall::transfer {
             dest: treasury_account,
-            value: 1000000000000000000,
+            value: 1_000_000_000_000_000_000,
         }),
         Call::NftSale(NftSaleCall::trador_create_collection {
             metadata: metadata,

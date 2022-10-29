@@ -410,10 +410,7 @@ impl pallet_uniques::Config for Runtime {
 }
 
 parameter_types! {
-    pub const MinBalanceToClaimSoulbound: Balance = 10 * DOLLARS;
-    pub const LegendaryTradorPrice: Balance = 15_000 * DOLLARS;
-    pub const MasterTradorPrice: Balance = 10_000 * DOLLARS;
-    pub const ProTradorPrice: Balance = 500 * DOLLARS;
+    pub const MinBalanceToClaimSoulbound: Balance = UNITS;
     pub const IterLimit: u32 = 1_000;
 }
 // =====RMRK========
