@@ -1,17 +1,20 @@
-version: "3.2"
+version: "3.8"
 
 services:
-  dev:
-    container_name: node-template
+  parachain-node:
+    container_name: parachain-node
     image: paritytech/ci-linux:production
-    working_dir: /var/www/node-template
+    working_dir: /var/www/parachain-node
     ports:
-      - "9944:9944"
+      - 9944:9944
+    networks:
+      - proxy
     environment:
-      - CARGO_HOME=/var/www/node-template/.cargo
+      - CARGO_HOME=/var/www/parachain-node/.cargo
     volumes:
-      - .:/var/www/node-template
-      - type: bind
-        source: ./.local
-        target: /root/.local
-    command: bash -c "cargo build --release && ./target/release/node-template --dev --ws-external"
+      - .:/var/www/parachain-node
+    command: bash -c "cargo build --release && ./target/release/all-in-network --dev --ws-external"
+
+networks:
+  proxy:
+    name: proxy

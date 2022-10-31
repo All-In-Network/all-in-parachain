@@ -1,0 +1,22 @@
+[package]
+name = "preconfig"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "preconfig"
+path = "src/preconfig.rs"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+subxt = { git = "https://github.com/paritytech/subxt" }
+tokio = { version = "1.18.0", features = ["full"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ['derive'] }
+futures = "0.3.24"
+serde = { version = "1.0.136", optional = false, features = ["derive"] }
+serde_json = { version = "1.0.79", optional = false }
+sp-keyring = "6.0.0"

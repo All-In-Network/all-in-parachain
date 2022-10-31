@@ -1,8 +1,10 @@
 [workspace]
 members = [
     "node",
-    "pallets/template",
+    "pallets/marketplace_nfts",
+    "pallets/funding",
     "runtime",
+    "scripts/preconfig"
 ]
 [profile.release]
 panic = "unwind"

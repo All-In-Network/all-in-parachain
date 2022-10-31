@@ -14,3 +14,8 @@
 
 # direnv cache
 .direnv
+
+# Environment files
+.env
+certbot/
+conf/rpc/letsencrypt/

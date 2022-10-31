@@ -1,4 +1,4 @@
-use node_template_runtime::{
+use all_in_runtime::{
 	AccountId, AuraConfig, BalancesConfig, GenesisConfig, GrandpaConfig, Signature, SudoConfig,
 	SystemConfig, WASM_BINARY,
 };
@@ -152,5 +152,7 @@ fn testnet_genesis(
 			key: Some(root_key),
 		},
 		transaction_payment: Default::default(),
+		nft_sale: Default::default(),
+		treasury: Default::default(),
 	}
 }
