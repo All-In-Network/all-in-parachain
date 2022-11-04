@@ -36,12 +36,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let treasury_account = MultiAddress::from(treasury_account);
 
     let metadata = BoundedVec(
-        "ipfs://QmfWBWsdtQErNxMHb2UfWBQHTwbTEdCUMetpwR4y9uDNp3"
+        "ipfs://QmPHXvMi5ebs3ZDe42z8fZsRGqRj83UZ3MJovVyoVuoSHB"
             .as_bytes()
             .to_vec(),
     );
     let metadata1 = BoundedVec(
-        "ipfs://QmfWBWsdtQErNxMHb2UfWBQHTwbTEdCUMetpwR4y9uDNp3"
+        "ipfs://QmPHXvMi5ebs3ZDe42z8fZsRGqRj83UZ3MJovVyoVuoSHB"
             .as_bytes()
             .to_vec(),
     );
@@ -51,7 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let txs_calls = vec![
         Call::Balances(BalancesCall::transfer {
             dest: treasury_account,
-            value: 1_000_000_000_000_000_000,
+            value: 100_000_000_000_000_000,
         }),
         Call::NftSale(NftSaleCall::trador_create_collection {
             metadata: metadata,
