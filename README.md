@@ -12,7 +12,7 @@ primero, complete [instrucciones de configuracion de rust](./docs/rust-setup.md)
 Use el comando nativo de Rust `cargo` para ejecutar el nodo:
 
 ```sh
-cargo run --release -- --dev
+ubuntu@ip-172-31-24-248:~/all-in-parachain$ cargo run --release -- --dev
 ```
 
 ### Compilar
@@ -20,32 +20,32 @@ cargo run --release -- --dev
 Use el siguiente comando para compilar el nodo sin necesidad de ejecutarlo
 
 ```sh
-cargo build --release
+ubuntu@ip-172-31-24-248:~/all-in-parachain$ cargo build --release
 ```
 
 ### Ejecutar nodo en desarrollo
 ejecutar el nodo sin persistir el estado
 
 ```bash
-./target/release/all-in-network --dev
+ubuntu@ip-172-31-24-248:~/all-in-parachain$ ./target/release/all-in-network --dev
 ```
 
 eliminar el estado de la cadena:
 
 ```bash
-./target/release/all-in-network purge-chain --dev
+ubuntu@ip-172-31-24-248:~/all-in-parachain$ ./target/release/all-in-network purge-chain --dev
 ```
 
 ejecutar el nodo con detalles de logging:
 
 ```bash
-RUST_BACKTRACE=1 ./target/release/all-in-network -ldebug --dev
+ubuntu@ip-172-31-24-248:~/all-in-parachain$ RUST_BACKTRACE=1 ./target/release/all-in-network -ldebug --dev
 ```
 
 ejecutar la preconfiguración para definir los datos del tesoro y la colección soulbound
 
 ```bash
-cargo run --bin preconfig
+ubuntu@ip-172-31-24-248:~/all-in-parachain$  cargo run --bin preconfig
 ```
 
 ### Conectar con el Front-end de Polkadot-JS  
