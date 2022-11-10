@@ -42,6 +42,11 @@ ejecutar el nodo con detalles de logging:
 RUST_BACKTRACE=1 ./target/release/all-in-network -ldebug --dev
 ```
 
+ejecutar la preconfiguración para definir los datos del tesoro y la colección soulbound
+
+```bash
+cargo run --bin preconfig
+```
 
 ### Conectar con el Front-end de Polkadot-JS  
 
